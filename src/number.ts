@@ -93,7 +93,7 @@ const makeIntegerAssertion = (negate: boolean) => () => (v: number) => {
 export function number(generators: ((v: unknown) => unknown)[] = []) {
   const assertions: ((v: number) => void)[] = [];
 
-  const main = makePrimitiveValidator([], generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v) => {
     if (typeof v !== 'boolean') {
       throw new Error(`Value ${v} is not an array`);
     }

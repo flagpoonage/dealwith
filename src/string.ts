@@ -75,7 +75,7 @@ export function string(generators: ((v: unknown) => unknown)[] = []) {
   const assertions: ((v: string) => void)[] = [];
   const sensitivity = { enabled: true };
 
-  const main = makePrimitiveValidator([], generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v) => {
     if (typeof v !== 'string') {
       throw new Error(`Value ${v} is not an object`);
     }

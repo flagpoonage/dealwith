@@ -61,7 +61,7 @@ export function array<T = unknown>(
 ) {
   const assertions: ((v: T[]) => void)[] = [];
 
-  const main = makePrimitiveValidator([], generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v) => {
     if (!Array.isArray(v)) {
       throw new Error(`Value ${v} is not an array`);
     }

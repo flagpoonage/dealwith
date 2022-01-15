@@ -25,7 +25,7 @@ const makeFalseAssertion = (negate: boolean) => () => (v: boolean) => {
 export function boolean(generators: ((v: unknown) => unknown)[] = []) {
   const assertions: ((v: boolean) => void)[] = [];
 
-  const main = makePrimitiveValidator([], generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v) => {
     if (typeof v !== 'boolean') {
       throw new Error(`Value ${v} is not an array`);
     }
