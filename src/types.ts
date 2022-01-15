@@ -168,6 +168,7 @@ export interface StringValidator
     StringValidatorFunctions {
   not: StringValidatorFunctions;
   case: (v: 'sensitive' | 'insensitive') => StringValidator;
+  orNull: () => StringValidator;
 }
 
 export interface BooleanValidatorFunctions {
