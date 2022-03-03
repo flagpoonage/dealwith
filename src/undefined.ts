@@ -6,12 +6,14 @@ import {
   valueToString,
 } from './converters';
 import { makePrimitiveValidator } from './shared';
-import { UndefinedValidator } from './types';
+import { KeyedError, UndefinedValidator } from './types';
 
-export function undefinedValue(generators: ((v: unknown) => unknown)[] = []) {
-  const main = makePrimitiveValidator([], generators, (v) => {
+export function undefinedValue(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const main = makePrimitiveValidator([], generators, (k, v) => {
     if (v !== undefined) {
-      throw new Error(`Value ${v} is not undefined`);
+      throw new KeyedError(k, `Value ${v} is not undefined`);
     }
   }) as UndefinedValidator;
 

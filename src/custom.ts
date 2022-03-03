@@ -8,8 +8,10 @@ import {
 import { makeFunctionAssertion, makePrimitiveValidator } from './shared';
 import { CustomValidator } from './types';
 
-export function custom<C>(generators: ((v: unknown) => unknown)[] = []) {
-  const assertions: ((v: C) => void)[] = [];
+export function custom<C>(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const assertions: ((k: string, v: C) => void)[] = [];
 
   const main = makePrimitiveValidator<C>(
     assertions,

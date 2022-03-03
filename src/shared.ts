@@ -1,4 +1,5 @@
 import {
+  KeyedError,
   ValueValidationError,
   ValueValidationErrorInstanceValue,
   ValueValidationErrorUnknownValue,
@@ -6,16 +7,19 @@ import {
 } from './types';
 
 export function makePrimitiveValidator<T>(
-  assertions: ((v: T) => void)[],
-  generators: ((v: unknown) => unknown)[],
-  generatorAssertion?: (v: unknown) => void
-): (v: unknown) => ValueValidationResult<T> {
-  return (value: unknown): ValueValidationResult<T> => {
+  assertions: ((k: string, v: T) => void)[],
+  generators: ((k: string, v: unknown) => unknown)[],
+  generatorAssertion?: (k: string, v: unknown) => void
+): (k: string, v: unknown) => ValueValidationResult<T> {
+  return (k: string, value: unknown): ValueValidationResult<T> => {
     try {
-      const generated_value = generators.reduce((acc, val) => val(acc), value);
-      generatorAssertion?.(generated_value);
+      const generated_value = generators.reduce(
+        (acc, val) => val(k, acc),
+        value
+      );
+      generatorAssertion?.(k, generated_value);
 
-      return runAssertions(assertions, generated_value as T);
+      return runAssertions(k, assertions, generated_value as T);
     } catch (exception) {
       return makeError(value, exception);
     }
@@ -26,30 +30,23 @@ export function makeError(
   initialValue: unknown,
   exception: unknown
 ): ValueValidationError {
-  const error =
-    exception instanceof Error
-      ? ({
-          isErrorInstance: true,
-          value: exception,
-        } as ValueValidationErrorInstanceValue)
-      : ({
-          isErrorInstance: false,
-          value: exception,
-        } as ValueValidationErrorUnknownValue);
+  // TODO: Simplify the whole error business
+  // Dont think any of this is actually necessary
 
   return {
     initialValue,
     hasError: true,
-    error,
+    error: exception,
   } as ValueValidationError;
 }
 
 export function runAssertions<T>(
-  assertions: ((v: T) => void)[],
+  key: string,
+  assertions: ((k: string, v: T) => void)[],
   value: T
 ): ValueValidationResult<T> {
   try {
-    assertions.forEach((assertion) => assertion(value));
+    assertions.forEach((assertion) => assertion(key, value));
     return {
       initialValue: value,
       result: value,
@@ -67,11 +64,12 @@ export const makeFunctionAssertion =
     typeName: string,
     assertionName?: string
   ) =>
-  (v: T) => {
+  (k: string, v: T) => {
     const result = negate ? !assertion(v) : assertion(v);
 
     if (!result) {
-      throw new Error(
+      throw new KeyedError(
+        k,
         `${typeName ?? typeof v} '${v}' failed ${
           assertionName ? `assertion named '${assertionName}'` : 'assertion'
         }`
@@ -90,6 +88,7 @@ export function makeAssertionFailureMessage(
 
 export function makeAssertionBuilder(typeName: string) {
   return (
+    key: string,
     fn: () => boolean,
     value: unknown,
     name: string,

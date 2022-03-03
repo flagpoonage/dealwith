@@ -5,12 +5,10 @@ export interface ValueValidationResultInitial {
 }
 
 export interface ValueValidationErrorInstanceValue {
-  isErrorInstance: true;
   value: Error;
 }
 
 export interface ValueValidationErrorUnknownValue {
-  isErrorInstance: false;
   value: unknown;
 }
 
@@ -41,15 +39,18 @@ export type ValueValidationResult<T> =
   | ValueValidationError;
 
 export interface ValidatorFunction<T = any> {
-  (v: unknown): ValueValidationResult<T>;
+  (k: string, v: unknown): ValueValidationResult<T>;
 }
 
 export type ValudationResultType<T> = T extends ValueValidationResult<infer U>
   ? U
   : unknown;
 
-export type ValidatorFunctionResultType<T extends (v: unknown) => any> =
-  T extends (v: unknown) => ValueValidationResult<infer U> ? U : never;
+export type ValidatorFunctionResultType<
+  T extends (k: string, v: unknown) => any
+> = T extends (k: string, v: unknown) => ValueValidationResult<infer U>
+  ? U
+  : never;
 
 export interface ToNumberFunction<T> {
   (fn?: (v: T) => number): NumberValidator;
@@ -185,4 +186,26 @@ export interface BooleanValidator
     BaseConvertible<boolean>,
     BooleanValidatorFunctions {
   not: BooleanValidatorFunctions;
+}
+
+export type AnyValidator =
+  | BooleanValidator
+  | NumberValidator
+  | StringValidator
+  | ArrayValidator
+  | ObjectValidator
+  | UndefinedValidator
+  | NullValidator
+  | CustomValidator<unknown>;
+
+export class KeyedError extends Error {
+  #key: string;
+  constructor(key: string, message: string) {
+    super(message);
+    this.#key = key;
+  }
+
+  get key() {
+    return this.#key;
+  }
 }

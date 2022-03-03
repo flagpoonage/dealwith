@@ -10,6 +10,7 @@ import {
   makePrimitiveValidator,
 } from './shared';
 import {
+  KeyedError,
   ArrayValidator,
   ValidatorFunction,
   ValidatorFunctionResultType,
@@ -18,8 +19,9 @@ import {
 const makeAssertion = makeAssertionBuilder('array');
 
 const makeOfExactLengthAssertion =
-  (negate: boolean) => (value: number) => (v: unknown[]) => {
+  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
     makeAssertion(
+      k,
       () => (negate ? v.length !== value : v.length === value),
       `of length ${v.length}`,
       `of exact length ${value}`,
@@ -28,8 +30,9 @@ const makeOfExactLengthAssertion =
   };
 
 const makeOfMinLengthAssertion =
-  (negate: boolean) => (value: number) => (v: unknown[]) => {
+  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
     makeAssertion(
+      k,
       () => (negate ? v.length < value : v.length >= value),
       `of length ${v.length}`,
       `within minimum length of ${value}`,
@@ -38,8 +41,9 @@ const makeOfMinLengthAssertion =
   };
 
 const makeOfMaxLengthAssertion =
-  (negate: boolean) => (value: number) => (v: unknown[]) => {
+  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
     makeAssertion(
+      k,
       () => (negate ? v.length > value : v.length <= value),
       `of length ${v.length}`,
       `within maximum length of ${value}`,
@@ -47,23 +51,25 @@ const makeOfMaxLengthAssertion =
     );
   };
 
-const makeEmptyAssertion = (negate: boolean) => () => (v: unknown[]) => {
-  makeAssertion(
-    () => (negate ? v.length !== 0 : v.length === 0),
-    `of length ${v.length}`,
-    'empty',
-    negate
-  );
-};
+const makeEmptyAssertion =
+  (negate: boolean) => () => (k: string, v: unknown[]) => {
+    makeAssertion(
+      k,
+      () => (negate ? v.length !== 0 : v.length === 0),
+      `of length ${v.length}`,
+      'empty',
+      negate
+    );
+  };
 
 export function array<T = unknown>(
-  generators: ((v: unknown) => unknown)[] = []
+  generators: ((k: string, v: unknown) => unknown)[] = []
 ) {
-  const assertions: ((v: T[]) => void)[] = [];
+  const assertions: ((k: string, v: T[]) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
     if (!Array.isArray(v)) {
-      throw new Error(`Value ${v} is not an array`);
+      throw new KeyedError(k, `Value ${v} is not an array`);
     }
   }) as ArrayValidator<T>;
 
@@ -120,13 +126,16 @@ export function array<T = unknown>(
     validator: ValidatorFunction<K>
   ): ArrayValidator<ValidatorFunctionResultType<ValidatorFunction<K>>> {
     return array<K>([
-      (v: unknown) => {
-        const result = main(v);
+      (k: string, v: unknown) => {
+        const result = main(k, v);
         if (result.hasError) {
           throw result.error.value;
         }
 
-        const results = result.result.map(validator);
+        const results = result.result.map((v, i) =>
+          // Increase key depth here
+          validator([k, `[${i}]`].filter(Boolean).join('.'), v)
+        );
 
         if (results.some((a) => a.hasError)) {
           throw results.filter((a) => a.hasError);

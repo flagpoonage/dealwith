@@ -10,24 +10,28 @@ import {
   makeFunctionAssertion,
   makePrimitiveValidator,
 } from './shared';
-import { BooleanValidator } from './types';
+import { BooleanValidator, KeyedError } from './types';
 
 const makeAssertion = makeAssertionBuilder('boolean');
 
-const makeTrueAssertion = (negate: boolean) => () => (v: boolean) => {
-  makeAssertion(() => (negate ? !v : v), v, 'true', negate);
-};
+const makeTrueAssertion =
+  (negate: boolean) => () => (k: string, v: boolean) => {
+    makeAssertion(k, () => (negate ? !v : v), v, 'true', negate);
+  };
 
-const makeFalseAssertion = (negate: boolean) => () => (v: boolean) => {
-  makeAssertion(() => (negate ? v : !v), v, 'false', negate);
-};
+const makeFalseAssertion =
+  (negate: boolean) => () => (k: string, v: boolean) => {
+    makeAssertion(k, () => (negate ? v : !v), v, 'false', negate);
+  };
 
-export function boolean(generators: ((v: unknown) => unknown)[] = []) {
-  const assertions: ((v: boolean) => void)[] = [];
+export function boolean(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const assertions: ((k: string, v: boolean) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
     if (typeof v !== 'boolean') {
-      throw new Error(`Value ${v} is not an array`);
+      throw new KeyedError(k, `Value ${v} is not a boolean`);
     }
   }) as BooleanValidator;
 

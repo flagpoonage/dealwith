@@ -10,13 +10,16 @@ import {
   makeFunctionAssertion,
   makePrimitiveValidator,
 } from './shared';
-import { StringValidator } from './types';
+import { KeyedError, StringValidator } from './types';
 
 const makeAssertion = makeAssertionBuilder('string');
 
 const makeEqualsAssertion =
-  (negate: boolean, sensitive: boolean) => (eq: string) => (v: string) => {
+  (negate: boolean, sensitive: boolean) =>
+  (eq: string) =>
+  (k: string, v: string) => {
     makeAssertion(
+      k,
       () => {
         const casedValue = sensitive ? eq : eq.toLowerCase();
         const casedInput = sensitive ? v : v.toLowerCase();
@@ -49,14 +52,16 @@ const makeAllowedAssertion =
     }
   };
 
-const makeEmptyAssertion = (negate: boolean) => () => (v: string) => {
-  makeAssertion(
-    () => (negate ? v.length !== 0 : v.length === 0),
-    v,
-    'empty',
-    negate
-  );
-};
+const makeEmptyAssertion =
+  (negate: boolean) => () => (k: string, v: string) => {
+    makeAssertion(
+      k,
+      () => (negate ? v.length !== 0 : v.length === 0),
+      v,
+      'empty',
+      negate
+    );
+  };
 
 const makeMatchesAssertion =
   (negate: boolean) => (regex: RegExp) => (v: string) => {
@@ -71,13 +76,15 @@ const makeMatchesAssertion =
     }
   };
 
-export function string(generators: ((v: unknown) => unknown)[] = []) {
-  const assertions: ((v: string) => void)[] = [];
+export function string(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const assertions: ((k: string, v: string) => void)[] = [];
   const sensitivity = { enabled: true };
 
-  const main = makePrimitiveValidator(assertions, generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
     if (typeof v !== 'string') {
-      throw new Error(`Value ${v} is not an object`);
+      throw new KeyedError(k, `Value ${v} is not a string`);
     }
   }) as StringValidator;
 

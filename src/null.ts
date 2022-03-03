@@ -5,12 +5,14 @@ import {
   valueToString,
 } from './converters';
 import { makePrimitiveValidator } from './shared';
-import { NullValidator } from './types';
+import { KeyedError, NullValidator } from './types';
 
-export function nullValue(generators: ((v: unknown) => unknown)[] = []) {
-  const main = makePrimitiveValidator([], generators, (v) => {
+export function nullValue(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const main = makePrimitiveValidator([], generators, (k, v) => {
     if (v !== null) {
-      throw new Error(`Value ${v} is not null`);
+      throw new KeyedError(k, `Value ${v} is not null`);
     }
   }) as NullValidator;
 

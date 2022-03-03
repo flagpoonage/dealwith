@@ -10,16 +10,17 @@ import {
   makeFunctionAssertion,
   makePrimitiveValidator,
 } from './shared';
-import { NumberValidator } from './types';
+import { KeyedError, NumberValidator } from './types';
 
 const makeAssertion = makeAssertionBuilder('number');
 
 const makeAllowedAssertion =
-  (negate: boolean) => (values: number[]) => (v: number) => {
+  (negate: boolean) => (values: number[]) => (k: string, v: number) => {
     const result = negate ? values.indexOf(v) === -1 : values.indexOf(v) !== -1;
 
     if (!result) {
-      throw new Error(
+      throw new KeyedError(
+        k,
         `Number value ${v} ${
           negate
             ? `is one of the disallowed values in [${values.join(', ')}]`
@@ -29,21 +30,24 @@ const makeAllowedAssertion =
     }
   };
 
-const makePositiveAssertion = (negate: boolean) => () => (v: number) => {
-  makeAssertion(() => (negate ? v < 0 : v > 0), v, 'positive', negate);
-};
+const makePositiveAssertion =
+  (negate: boolean) => () => (k: string, v: number) => {
+    makeAssertion(k, () => (negate ? v < 0 : v > 0), v, 'positive', negate);
+  };
 
-const makeNegativeAssertion = (negate: boolean) => () => (v: number) => {
-  makeAssertion(() => (negate ? v > 0 : v < 0), v, 'negative', negate);
-};
+const makeNegativeAssertion =
+  (negate: boolean) => () => (k: string, v: number) => {
+    makeAssertion(k, () => (negate ? v > 0 : v < 0), v, 'negative', negate);
+  };
 
-const makeZeroAssertion = (negate: boolean) => () => (v: number) => {
-  makeAssertion(() => (negate ? v !== 0 : v === 0), v, 'zero', negate);
+const makeZeroAssertion = (negate: boolean) => () => (k: string, v: number) => {
+  makeAssertion(k, () => (negate ? v !== 0 : v === 0), v, 'zero', negate);
 };
 
 const makeLessThanAssertion =
-  (negate: boolean) => (value: number) => (v: number) => {
+  (negate: boolean) => (value: number) => (k: string, v: number) => {
     makeAssertion(
+      k,
       () => (negate ? v >= value : v < value),
       v,
       `less than ${value}`,
@@ -52,8 +56,9 @@ const makeLessThanAssertion =
   };
 
 const makeMoreThanAssertion =
-  (negate: boolean) => (value: number) => (v: number) => {
+  (negate: boolean) => (value: number) => (k: string, v: number) => {
     makeAssertion(
+      k,
       () => (negate ? v >= value : v < value),
       v,
       `less than ${value}`,
@@ -62,8 +67,9 @@ const makeMoreThanAssertion =
   };
 
 const makeEqualsAssertion =
-  (negate: boolean) => (value: number) => (v: number) => {
+  (negate: boolean) => (value: number) => (k: string, v: number) => {
     makeAssertion(
+      k,
       () => (negate ? v !== value : v === value),
       v,
       `equal to ${value}`,
@@ -72,8 +78,9 @@ const makeEqualsAssertion =
   };
 
 const makeMultipleOfAssertion =
-  (negate: boolean) => (value: number) => (v: number) => {
+  (negate: boolean) => (value: number) => (k: string, v: number) => {
     makeAssertion(
+      k,
       () => (negate ? v % value !== 0 : v % value === 0),
       v,
       `a multiple of ${value}`,
@@ -81,21 +88,25 @@ const makeMultipleOfAssertion =
     );
   };
 
-const makeIntegerAssertion = (negate: boolean) => () => (v: number) => {
-  makeAssertion(
-    () => (negate ? !Number.isInteger(v) : Number.isInteger(v)),
-    v,
-    `an integer`,
-    negate
-  );
-};
+const makeIntegerAssertion =
+  (negate: boolean) => () => (k: string, v: number) => {
+    makeAssertion(
+      k,
+      () => (negate ? !Number.isInteger(v) : Number.isInteger(v)),
+      v,
+      `an integer`,
+      negate
+    );
+  };
 
-export function number(generators: ((v: unknown) => unknown)[] = []) {
-  const assertions: ((v: number) => void)[] = [];
+export function number(
+  generators: ((k: string, v: unknown) => unknown)[] = []
+) {
+  const assertions: ((k: string, v: number) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
     if (typeof v !== 'boolean') {
-      throw new Error(`Value ${v} is not an array`);
+      throw new KeyedError(k, `Value ${v} is not a number`);
     }
   }) as NumberValidator;
 

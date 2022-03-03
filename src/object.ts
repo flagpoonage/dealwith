@@ -10,16 +10,17 @@ import {
   ValidatorFunctionResultType,
   ObjectValidator,
   ValueValidationResult,
+  KeyedError,
 } from './types';
 
 export function object<T = unknown>(
-  generators: ((v: unknown) => unknown)[] = []
+  generators: ((k: string, v: unknown) => unknown)[] = []
 ) {
-  const assertions: ((v: T) => void)[] = [];
+  const assertions: ((k: string, v: T) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (v) => {
+  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
     if (v === null || typeof v !== 'object' || Array.isArray(v)) {
-      throw new Error(`Value ${v} is not an object`);
+      throw new KeyedError(k, `Value ${v} is not an object`);
     }
   }) as ObjectValidator<T>;
 
@@ -46,8 +47,8 @@ export function object<T = unknown>(
     [K in keyof T]: ValidatorFunction<T[K]>;
   }): ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T>>> {
     return object<T>([
-      (v: unknown) => {
-        const result = main(v);
+      (k: string, v: unknown) => {
+        const result = main(k, v);
         if (result.hasError) {
           throw result.error.value;
         }
@@ -57,7 +58,8 @@ export function object<T = unknown>(
         const output = (
           Object.entries(s) as [keyof T, ValidatorFunction][]
         ).map<[keyof T, ValueValidationResult<unknown>]>(([key, validator]) => {
-          return [key, validator(obj[key])];
+          // Increase depth key here
+          return [key, validator([k, key].filter(Boolean).join('.'), obj[key])];
         });
 
         const errors = output.filter(([, r]) => r.hasError);
