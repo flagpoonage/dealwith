@@ -19,4 +19,5 @@ const dealwith = {
 };
 
 export * from './types';
+export * from './flatten-error';
 export default dealwith;
