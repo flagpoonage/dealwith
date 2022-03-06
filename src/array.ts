@@ -78,7 +78,7 @@ export function array<T = unknown>(
   main.toBoolean = valueToBoolean(main, (v) => Boolean(v));
   main.toCustom = valueToCustom(main);
 
-  main.assert = (assertion: (v: T[]) => boolean, name?: string) => {
+  main.assert = (assertion: (v: T[]) => boolean, name: string) => {
     assertions.push(
       makeFunctionAssertion<T[]>(false, assertion, 'array', name)
     );
@@ -106,7 +106,7 @@ export function array<T = unknown>(
   };
 
   main.not = {
-    assert: (assertion: (v: T[]) => boolean, name?: string) => {
+    assert: (assertion: (v: T[]) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<T[]>(true, assertion, 'array', name)
       );
@@ -129,7 +129,7 @@ export function array<T = unknown>(
       (k: string, v: unknown) => {
         const result = main(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         const results = result.result.map((v, i) =>

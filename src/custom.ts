@@ -25,7 +25,7 @@ export function custom<C>(
   main.toArray = valueToArray(main);
 
   const assert =
-    (negate: boolean) => (assertion: (v: C) => boolean, name?: string) => {
+    (negate: boolean) => (assertion: (v: C) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<C>(negate, assertion, 'custom value', name)
       );

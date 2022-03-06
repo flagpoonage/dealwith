@@ -117,7 +117,7 @@ export function number(
   main.toArray = valueToArray(main);
 
   const assert =
-    (negate: boolean) => (assertion: (v: number) => boolean, name?: string) => {
+    (negate: boolean) => (assertion: (v: number) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<number>(negate, assertion, 'number', name)
       );

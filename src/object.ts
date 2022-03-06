@@ -30,7 +30,7 @@ export function object<T = unknown>(
   main.toCustom = valueToCustom(main);
 
   const assert =
-    (negate: boolean) => (assertion: (v: T) => boolean, name?: string) => {
+    (negate: boolean) => (assertion: (v: T) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<T>(negate, assertion, 'object', name)
       );
@@ -50,7 +50,7 @@ export function object<T = unknown>(
       (k: string, v: unknown) => {
         const result = main(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         const obj = result.result as unknown as Record<keyof T, unknown>;

@@ -42,8 +42,7 @@ export function boolean(
   main.toArray = valueToArray(main);
 
   const assert =
-    (negate: boolean) =>
-    (assertion: (v: boolean) => boolean, name?: string) => {
+    (negate: boolean) => (assertion: (v: boolean) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<boolean>(negate, assertion, 'boolean', name)
       );

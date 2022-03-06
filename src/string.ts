@@ -34,7 +34,7 @@ const makeEqualsAssertion =
 const makeAllowedAssertion =
   (negate: boolean, sensitive: boolean) =>
   (values: string[]) =>
-  (v: string) => {
+  (k: string, v: string) => {
     const casedValues = sensitive ? values : values.map((a) => a.toLowerCase());
     const casedInput = sensitive ? v : v.toLowerCase();
     const result = negate
@@ -42,7 +42,8 @@ const makeAllowedAssertion =
       : casedValues.indexOf(casedInput) !== -1;
 
     if (!result) {
-      throw new Error(
+      throw new KeyedError(
+        k,
         `String value ${v} ${
           negate
             ? `is one of the disallowed values in [${values.join(', ')}]`
@@ -64,11 +65,12 @@ const makeEmptyAssertion =
   };
 
 const makeMatchesAssertion =
-  (negate: boolean) => (regex: RegExp) => (v: string) => {
+  (negate: boolean) => (regex: RegExp) => (k: string, v: string) => {
     const result = negate ? !regex.test(v) : regex.test(v);
 
     if (!result) {
-      throw new Error(
+      throw new KeyedError(
+        k,
         `String value '${v}' ${
           negate ? 'matches' : 'does not match'
         } pattern ${regex}`
@@ -95,7 +97,7 @@ export function string(
   main.toArray = valueToArray(main);
 
   const assert =
-    (negate: boolean) => (assertion: (v: string) => boolean, name?: string) => {
+    (negate: boolean) => (assertion: (v: string) => boolean, name: string) => {
       assertions.push(
         makeFunctionAssertion<string>(negate, assertion, 'string', name)
       );

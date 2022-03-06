@@ -1,8 +1,6 @@
 import {
   KeyedError,
   ValueValidationError,
-  ValueValidationErrorInstanceValue,
-  ValueValidationErrorUnknownValue,
   ValueValidationResult,
 } from './types';
 
@@ -62,7 +60,7 @@ export const makeFunctionAssertion =
     negate: boolean,
     assertion: (v: T) => boolean,
     typeName: string,
-    assertionName?: string
+    assertionName: string
   ) =>
   (k: string, v: T) => {
     const result = negate ? !assertion(v) : assertion(v);
@@ -70,9 +68,9 @@ export const makeFunctionAssertion =
     if (!result) {
       throw new KeyedError(
         k,
-        `${typeName ?? typeof v} '${v}' failed ${
-          assertionName ? `assertion named '${assertionName}'` : 'assertion'
-        }`
+        `${typeName ?? typeof v} '${v}' ${
+          negate ? 'is' : 'is not'
+        } ${assertionName}`
       );
     }
   };
@@ -95,7 +93,8 @@ export function makeAssertionBuilder(typeName: string) {
     negated: boolean
   ) => {
     if (!fn()) {
-      throw new Error(
+      throw new KeyedError(
+        key,
         makeAssertionFailureMessage(typeName, value, name, negated)
       );
     }

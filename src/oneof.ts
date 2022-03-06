@@ -26,9 +26,7 @@ export function oneof<T extends ((k: string, v: unknown) => any)[]>(
     return {
       hasError: true,
       initialValue: v,
-      error: {
-        value: new KeyedError(k, `No validators were able to match ${v}`),
-      },
+      error: errors,
     };
 
     // Perhaps the errors from each validator should get listed here

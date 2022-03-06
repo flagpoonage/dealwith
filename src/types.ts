@@ -24,9 +24,14 @@ export interface ValueValidationInstanceError
   error: ValueValidationErrorInstanceValue;
 }
 
-export type ValueValidationError =
-  | ValueValidationInstanceError
-  | ValueValidationUnknownError;
+export type ValueValidationError = {
+  hasError: true;
+  initialValue: unknown;
+  error:
+    | Record<string, ValueValidationError>
+    | ValueValidationError[]
+    | KeyedError;
+};
 
 export interface ValueValidationSuccess<T>
   extends ValueValidationResultInitial {
@@ -73,7 +78,7 @@ export interface ToArrayFunction<T> {
 }
 
 export interface CustomValidatorFunctions<C> {
-  assert: (assertion: (v: C) => boolean, name?: string) => CustomValidator<C>;
+  assert: (assertion: (v: C) => boolean, name: string) => CustomValidator<C>;
 }
 
 export interface CustomValidator<T>
@@ -88,7 +93,7 @@ export interface CustomValidator<T>
 }
 
 export interface ArrayValidatorFunctions<T> {
-  assert: (assertion: (v: T[]) => boolean, name?: string) => ArrayValidator<T>;
+  assert: (assertion: (v: T[]) => boolean, name: string) => ArrayValidator<T>;
   ofExactLength: (value: number) => ArrayValidator<T>;
   empty: () => ArrayValidator<T>;
 }
@@ -106,7 +111,7 @@ export interface ArrayValidator<T = unknown>
 }
 
 export interface ObjectValidatorFunctions<T> {
-  assert: (assertion: (v: T) => boolean, name?: string) => ObjectValidator<T>;
+  assert: (assertion: (v: T) => boolean, name: string) => ObjectValidator<T>;
 }
 
 export interface ObjectValidator<T = unknown>
@@ -142,7 +147,7 @@ export interface NumberValidatorFunctions {
   integer: () => NumberValidator;
   positive: () => NumberValidator;
   negative: () => NumberValidator;
-  assert: (assertion: (v: number) => boolean, name?: string) => NumberValidator;
+  assert: (assertion: (v: number) => boolean, name: string) => NumberValidator;
   multipleOf: (v: number) => NumberValidator;
   zero: () => NumberValidator;
   equals: (v: number) => NumberValidator;
@@ -160,7 +165,7 @@ export interface StringValidatorFunctions {
   matches: (r: RegExp) => StringValidator;
   equals: (v: string) => StringValidator;
   empty: () => StringValidator;
-  assert: (assertion: (v: string) => boolean, name?: string) => StringValidator;
+  assert: (assertion: (v: string) => boolean, name: string) => StringValidator;
 }
 
 export interface StringValidator
@@ -177,7 +182,7 @@ export interface BooleanValidatorFunctions {
   false: () => BooleanValidator;
   assert: (
     assertion: (v: boolean) => boolean,
-    name?: string
+    name: string
   ) => BooleanValidator;
 }
 

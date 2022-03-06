@@ -14,7 +14,7 @@ export function valueToString<T>(
       (k: string, v: unknown) => {
         const result = previousValidator(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         try {
@@ -41,7 +41,7 @@ export function valueToNumber<T>(
       (k: string, v: unknown) => {
         const result = previousValidator(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         try {
@@ -68,7 +68,7 @@ export function valueToBoolean<T>(
       (k: string, v: unknown) => {
         const result = previousValidator(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         try {
@@ -92,7 +92,7 @@ export function valueToCustom<T>(previousValidator: ValidatorFunction<T>) {
       (k: string, v: unknown) => {
         const result = previousValidator(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         try {
@@ -116,7 +116,7 @@ export function valueToArray<T>(previousValidator: ValidatorFunction<T>) {
       (k: string, v: unknown) => {
         const result = previousValidator(k, v);
         if (result.hasError) {
-          throw result.error.value;
+          throw result.error;
         }
 
         try {
