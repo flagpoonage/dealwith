@@ -105,7 +105,7 @@ export function number(
   const assertions: ((k: string, v: number) => void)[] = [];
 
   const main = makePrimitiveValidator(assertions, generators, (k, v) => {
-    if (typeof v !== 'boolean') {
+    if (typeof v !== 'number') {
       throw new KeyedError(k, `Value ${v} is not a number`);
     }
   }) as NumberValidator;
