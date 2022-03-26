@@ -134,22 +134,22 @@ export function string(
   main.not = {
     assert: assert(true),
     allowed: (...values: string[]) => {
-      assertions.push(makeAllowedAssertion(false, sensitivity.enabled)(values));
+      assertions.push(makeAllowedAssertion(true, sensitivity.enabled)(values));
       return main;
     },
 
     matches: (r: RegExp) => {
-      assertions.push(makeMatchesAssertion(false)(r));
+      assertions.push(makeMatchesAssertion(true)(r));
       return main;
     },
 
     empty: () => {
-      assertions.push(makeEmptyAssertion(false)());
+      assertions.push(makeEmptyAssertion(true)());
       return main;
     },
 
     equals: (eq: string) => {
-      assertions.push(makeEqualsAssertion(false, sensitivity.enabled)(eq));
+      assertions.push(makeEqualsAssertion(true, sensitivity.enabled)(eq));
       return main;
     },
   };
