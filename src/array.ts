@@ -113,11 +113,11 @@ export function array<T = unknown>(
       return main;
     },
     empty: () => {
-      assertions.push(makeEmptyAssertion(false)());
+      assertions.push(makeEmptyAssertion(true)());
       return main;
     },
     ofExactLength: (value: number) => {
-      assertions.push(makeOfExactLengthAssertion(false)(value));
+      assertions.push(makeOfExactLengthAssertion(true)(value));
       return main;
     },
   };

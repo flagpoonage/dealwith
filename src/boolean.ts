@@ -64,11 +64,11 @@ export function boolean(
   main.not = {
     assert: assert(true),
     true: () => {
-      assertions.push(makeTrueAssertion(false)());
+      assertions.push(makeTrueAssertion(true)());
       return main;
     },
     false: () => {
-      assertions.push(makeFalseAssertion(false)());
+      assertions.push(makeFalseAssertion(true)());
       return main;
     },
   };

@@ -175,47 +175,47 @@ export function number(
     assert: assert(true),
 
     allowed: (...values: number[]) => {
-      assertions.push(makeAllowedAssertion(false)(values));
+      assertions.push(makeAllowedAssertion(true)(values));
       return main;
     },
 
     integer: () => {
-      assertions.push(makeIntegerAssertion(false)());
+      assertions.push(makeIntegerAssertion(true)());
       return main;
     },
 
     positive: () => {
-      assertions.push(makePositiveAssertion(false)());
+      assertions.push(makePositiveAssertion(true)());
       return main;
     },
 
     negative: () => {
-      assertions.push(makeNegativeAssertion(false)());
+      assertions.push(makeNegativeAssertion(true)());
       return main;
     },
 
     lessThan: (v: number) => {
-      assertions.push(makeLessThanAssertion(false)(v));
+      assertions.push(makeLessThanAssertion(true)(v));
       return main;
     },
 
     moreThan: (v: number) => {
-      assertions.push(makeMoreThanAssertion(false)(v));
+      assertions.push(makeMoreThanAssertion(true)(v));
       return main;
     },
 
     zero: () => {
-      assertions.push(makeZeroAssertion(false)());
+      assertions.push(makeZeroAssertion(true)());
       return main;
     },
 
     multipleOf: (v: number) => {
-      assertions.push(makeMultipleOfAssertion(false)(v));
+      assertions.push(makeMultipleOfAssertion(true)(v));
       return main;
     },
 
     equals: (v: number) => {
-      assertions.push(makeEqualsAssertion(false)(v));
+      assertions.push(makeEqualsAssertion(true)(v));
       return main;
     },
   };
