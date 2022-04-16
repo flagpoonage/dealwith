@@ -6,7 +6,7 @@ Typescript data validator and transformer.
 
 Chain the API together to build up a schema validator function
 
-```
+```typescript
 const dw = require('dealwith');
 
 const schema = dw.object().schema({
@@ -22,7 +22,7 @@ const schema = dw.object().schema({
 
 Give the function some data to validate
 
-```
+```typescript
 // Type: unknown
 const data = dataFromUnknownSource();
 
@@ -31,12 +31,14 @@ const output = schema(data);
 
 Automatically returns the result with proper typing:
 
-```
+```typescript
 if (!output.hasError) {
-  /* Type of output.result = {
-    name: string;
-    value: (string | number)[];
-  }
+  /*
+    Type of output.result = {
+      name: string;
+      value: (string | number)[];
+    }
+  */
   console.log(output.result);
 }
 ```
@@ -45,7 +47,7 @@ if (!output.hasError) {
 
 A lot of libraries deliberately avoid transforming, but this one does the opposite. You can transform and validate at the same time.
 
-```
+```typescript
 const validateAndTransform = dw.object().schema({
   name: dw.string().matches(/\w+/),
   value: dw.array().items(
