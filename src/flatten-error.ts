@@ -1,4 +1,4 @@
-import { KeyedError } from '.';
+import { KeyedError } from './types';
 import { ValueValidationError } from './types';
 
 export function flattenError(
