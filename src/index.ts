@@ -18,9 +18,6 @@ const dealwith = {
   oneof,
 };
 
-import type * as DWTypes from './types';
-
+export * from './types';
 export * from './flatten-error';
-export { DWTypes };
-
 export default dealwith;
