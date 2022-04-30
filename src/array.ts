@@ -3,18 +3,18 @@ import {
   valueToCustom,
   valueToNumber,
   valueToString,
-} from './converters';
+} from './converters.js';
 import {
   makeAssertionBuilder,
   makeFunctionAssertion,
   makePrimitiveValidator,
-} from './shared';
+} from './shared.js';
 import {
   KeyedError,
   ArrayValidator,
   ValidatorFunction,
   ValidatorFunctionResultType,
-} from './types';
+} from './types.js';
 
 const makeAssertion = makeAssertionBuilder('array');
 

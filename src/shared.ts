@@ -2,7 +2,7 @@ import {
   KeyedError,
   ValueValidationError,
   ValueValidationResult,
-} from './types';
+} from './types.js';
 
 export function makePrimitiveValidator<T>(
   assertions: ((k: string, v: T) => void)[],

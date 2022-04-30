@@ -4,9 +4,9 @@ import {
   valueToCustom,
   valueToNumber,
   valueToString,
-} from './converters';
-import { makePrimitiveValidator } from './shared';
-import { KeyedError, UndefinedValidator } from './types';
+} from './converters.js';
+import { makePrimitiveValidator } from './shared.js';
+import { KeyedError, UndefinedValidator } from './types.js';
 
 export function undefinedValue(
   generators: ((k: string, v: unknown) => unknown)[] = []

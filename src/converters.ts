@@ -1,9 +1,9 @@
-import { array } from './array';
-import { boolean } from './boolean';
-import { custom } from './custom';
-import { number } from './number';
-import { string } from './string';
-import { KeyedError, ValidatorFunction } from './types';
+import { array } from './array.js';
+import { boolean } from './boolean.js';
+import { custom } from './custom.js';
+import { number } from './number.js';
+import { string } from './string.js';
+import { KeyedError, ValidatorFunction } from './types.js';
 
 export function valueToString<T>(
   previousValidator: ValidatorFunction<T>,

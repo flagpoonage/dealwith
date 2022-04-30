@@ -1,5 +1,5 @@
-import { KeyedError } from './types';
-import { ValueValidationError } from './types';
+import { KeyedError } from './types.js';
+import { ValueValidationError } from './types.js';
 
 export function flattenError(
   error: ValueValidationError,

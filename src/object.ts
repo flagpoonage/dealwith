@@ -3,15 +3,15 @@ import {
   valueToNumber,
   valueToBoolean,
   valueToCustom,
-} from './converters';
-import { makePrimitiveValidator, makeFunctionAssertion } from './shared';
+} from './converters.js';
+import { makePrimitiveValidator, makeFunctionAssertion } from './shared.js';
 import {
   ValidatorFunction,
   ValidatorFunctionResultType,
   ObjectValidator,
   ValueValidationResult,
   KeyedError,
-} from './types';
+} from './types.js';
 
 export function object<T = unknown>(
   generators: ((k: string, v: unknown) => unknown)[] = []

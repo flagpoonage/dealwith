@@ -4,13 +4,13 @@ import {
   valueToBoolean,
   valueToCustom,
   valueToArray,
-} from './converters';
+} from './converters.js';
 import {
   makeAssertionBuilder,
   makeFunctionAssertion,
   makePrimitiveValidator,
-} from './shared';
-import { BooleanValidator, KeyedError } from './types';
+} from './shared.js';
+import { BooleanValidator, KeyedError } from './types.js';
 
 const makeAssertion = makeAssertionBuilder('boolean');
 

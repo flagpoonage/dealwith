@@ -3,9 +3,9 @@ import {
   valueToCustom,
   valueToNumber,
   valueToString,
-} from './converters';
-import { makePrimitiveValidator } from './shared';
-import { KeyedError, NullValidator } from './types';
+} from './converters.js';
+import { makePrimitiveValidator } from './shared.js';
+import { KeyedError, NullValidator } from './types.js';
 
 export function nullValue(
   generators: ((k: string, v: unknown) => unknown)[] = []

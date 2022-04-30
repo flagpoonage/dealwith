@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  KeyedError,
   ValidatorFunction,
   ValidatorFunctionResultType,
   ValueValidationResult,
-} from './types';
+} from './types.js';
 
 // TODO: Get rid of this any!
 export function oneof<T extends ((k: string, v: unknown) => any)[]>(

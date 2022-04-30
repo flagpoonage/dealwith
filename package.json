@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "repository": "git@github.com:flagpoonage/dealwith.git",
   "author": "James <pokinoice@live.com>",
+  "type": "module",
   "license": "MIT",
   "files": [
     "dist"

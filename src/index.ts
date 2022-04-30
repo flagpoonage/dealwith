@@ -1,13 +1,13 @@
-import { string } from './string';
-import { number } from './number';
-import { boolean } from './boolean';
-import { array } from './array';
-import { object } from './object';
-import { nullValue } from './null';
-import { undefinedValue } from './undefined';
-import { oneof } from './oneof';
+import { string } from './string.js';
+import { number } from './number.js';
+import { boolean } from './boolean.js';
+import { array } from './array.js';
+import { object } from './object.js';
+import { nullValue } from './null.js';
+import { undefinedValue } from './undefined.js';
+import { oneof } from './oneof.js';
 
-const dealwith = {
+export const DW = {
   string,
   number,
   boolean,
@@ -18,6 +18,5 @@ const dealwith = {
   oneof,
 };
 
-export * from './types';
-export * from './flatten-error';
-export default dealwith;
+export * from './types.js';
+export * from './flatten-error.js';

@@ -4,9 +4,9 @@ import {
   valueToCustom,
   valueToNumber,
   valueToString,
-} from './converters';
-import { makeFunctionAssertion, makePrimitiveValidator } from './shared';
-import { CustomValidator } from './types';
+} from './converters.js';
+import { makeFunctionAssertion, makePrimitiveValidator } from './shared.js';
+import { CustomValidator } from './types.js';
 
 export function custom<C>(
   generators: ((k: string, v: unknown) => unknown)[] = []
