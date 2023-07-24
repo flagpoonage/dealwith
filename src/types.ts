@@ -186,6 +186,8 @@ export interface BooleanValidatorFunctions {
   ) => BooleanValidator;
 }
 
+export type ValidatorGenerator<T extends AnyValidator> = (generators?: ((k: string, v: unknown) => unknown)[]) => T;
+
 export interface BooleanValidator
   extends ValidatorFunction<boolean>,
     BaseConvertible<boolean>,

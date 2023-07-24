@@ -1,6 +1,6 @@
 {
   "name": "dealwith",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "lib/cjs/index.js",
   "repository": "git@github.com:flagpoonage/dealwith.git",
   "author": "James <pokinoice@live.com>",

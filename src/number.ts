@@ -59,9 +59,9 @@ const makeMoreThanAssertion =
   (negate: boolean) => (value: number) => (k: string, v: number) => {
     makeAssertion(
       k,
-      () => (negate ? v >= value : v < value),
+      () => (negate ? v <= value : v > value),
       v,
-      `less than ${value}`,
+      `more than ${value}`,
       negate
     );
   };
