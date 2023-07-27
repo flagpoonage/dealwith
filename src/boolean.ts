@@ -15,21 +15,21 @@ import { BooleanValidator, KeyedError } from './types.js';
 const makeAssertion = makeAssertionBuilder('boolean');
 
 const makeTrueAssertion =
-  (negate: boolean) => () => (k: string, v: boolean) => {
+  (negate: boolean) => () => (v: boolean, k = '') => {
     makeAssertion(k, () => (negate ? !v : v), v, 'true', negate);
   };
 
 const makeFalseAssertion =
-  (negate: boolean) => () => (k: string, v: boolean) => {
+  (negate: boolean) => () => (v: boolean, k = '') => {
     makeAssertion(k, () => (negate ? v : !v), v, 'false', negate);
   };
 
 export function boolean(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const assertions: ((k: string, v: boolean) => void)[] = [];
+  const assertions: ((v: boolean, k?: string) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v, k = '') => {
     if (typeof v !== 'boolean') {
       throw new KeyedError(k, `Value ${v} is not a boolean`);
     }

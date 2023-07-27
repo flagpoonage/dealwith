@@ -9,9 +9,9 @@ import { makeFunctionAssertion, makePrimitiveValidator } from './shared.js';
 import { CustomValidator } from './types.js';
 
 export function custom<C>(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const assertions: ((k: string, v: C) => void)[] = [];
+  const assertions: ((v: C, k?: string) => void)[] = [];
 
   const main = makePrimitiveValidator<C>(
     assertions,

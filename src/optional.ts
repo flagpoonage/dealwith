@@ -7,7 +7,7 @@ import {
 import { undefinedValue } from './undefined.js';
 
 // TODO: Get rid of this any!
-export function optional<T extends ((k: string, v: unknown) => any)[]>(
+export function optional<T extends ((v: unknown, k?: string) => any)[]>(
   ...validators: T
 ): ValidatorFunction<ValidatorFunctionResultType<T[number]> | undefined> {
   return oneof(undefinedValue(), ...validators);

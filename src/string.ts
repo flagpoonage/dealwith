@@ -17,7 +17,7 @@ const makeAssertion = makeAssertionBuilder('string');
 const makeEqualsAssertion =
   (negate: boolean, sensitive: boolean) =>
   (eq: string) =>
-  (k: string, v: string) => {
+  (v: string, k = '') => {
     makeAssertion(
       k,
       () => {
@@ -34,7 +34,7 @@ const makeEqualsAssertion =
 const makeAllowedAssertion =
   (negate: boolean, sensitive: boolean) =>
   (values: string[]) =>
-  (k: string, v: string) => {
+  (v: string, k = '') => {
     const casedValues = sensitive ? values : values.map((a) => a.toLowerCase());
     const casedInput = sensitive ? v : v.toLowerCase();
     const result = negate
@@ -54,7 +54,7 @@ const makeAllowedAssertion =
   };
 
 const makeEmptyAssertion =
-  (negate: boolean) => () => (k: string, v: string) => {
+  (negate: boolean) => () => (v: string, k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length !== 0 : v.length === 0),
@@ -65,7 +65,7 @@ const makeEmptyAssertion =
   };
 
 const makeMatchesAssertion =
-  (negate: boolean) => (regex: RegExp) => (k: string, v: string) => {
+  (negate: boolean) => (regex: RegExp) => (v: string, k = '') => {
     const result = negate ? !regex.test(v) : regex.test(v);
 
     if (!result) {
@@ -79,12 +79,12 @@ const makeMatchesAssertion =
   };
 
 export function string(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const assertions: ((k: string, v: string) => void)[] = [];
+  const assertions: ((v: string, k?: string) => void)[] = [];
   const sensitivity = { enabled: true };
 
-  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v, k = '') => {
     if (typeof v !== 'string') {
       throw new KeyedError(k, `Value ${v} is not a string`);
     }

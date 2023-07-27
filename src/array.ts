@@ -19,7 +19,7 @@ import {
 const makeAssertion = makeAssertionBuilder('array');
 
 const makeOfExactLengthAssertion =
-  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
+  (negate: boolean) => (value: number) => (v: unknown[], k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length !== value : v.length === value),
@@ -30,7 +30,7 @@ const makeOfExactLengthAssertion =
   };
 
 const makeOfMinLengthAssertion =
-  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
+  (negate: boolean) => (value: number) => (v: unknown[], k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length < value : v.length >= value),
@@ -41,7 +41,7 @@ const makeOfMinLengthAssertion =
   };
 
 const makeOfMaxLengthAssertion =
-  (negate: boolean) => (value: number) => (k: string, v: unknown[]) => {
+  (negate: boolean) => (value: number) => (v: unknown[], k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length > value : v.length <= value),
@@ -52,7 +52,7 @@ const makeOfMaxLengthAssertion =
   };
 
 const makeEmptyAssertion =
-  (negate: boolean) => () => (k: string, v: unknown[]) => {
+  (negate: boolean) => () => (v: unknown[], k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length !== 0 : v.length === 0),
@@ -63,11 +63,11 @@ const makeEmptyAssertion =
   };
 
 export function array<T = unknown>(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const assertions: ((k: string, v: T[]) => void)[] = [];
+  const assertions: ((v: T[], k?: string) => void)[] = [];
 
-  const main = makePrimitiveValidator(assertions, generators, (k, v) => {
+  const main = makePrimitiveValidator(assertions, generators, (v, k='') => {
     if (!Array.isArray(v)) {
       throw new KeyedError(k, `Value ${v} is not an array`);
     }
@@ -126,15 +126,15 @@ export function array<T = unknown>(
     validator: ValidatorFunction<K>
   ): ArrayValidator<ValidatorFunctionResultType<ValidatorFunction<K>>> {
     return array<K>([
-      (k: string, v: unknown) => {
-        const result = main(k, v);
+      (v: unknown, k = '') => {
+        const result = main(v, k);
         if (result.hasError) {
           throw result.error;
         }
 
         const results = result.result.map((v, i) =>
           // Increase key depth here
-          validator([k, `[${i}]`].filter(Boolean).join('.'), v)
+          validator(v, [k, `[${i}]`].filter(Boolean).join('.'))
         );
 
         if (results.some((a) => a.hasError)) {

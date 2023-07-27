@@ -44,7 +44,7 @@ export type ValueValidationResult<T> =
   | ValueValidationError;
 
 export interface ValidatorFunction<T = any> {
-  (k: string, v: unknown): ValueValidationResult<T>;
+  (v: unknown, k?: string): ValueValidationResult<T>;
 }
 
 export type ValudationResultType<T> = T extends ValueValidationResult<infer U>
@@ -52,8 +52,8 @@ export type ValudationResultType<T> = T extends ValueValidationResult<infer U>
   : unknown;
 
 export type ValidatorFunctionResultType<
-  T extends (k: string, v: unknown) => any
-> = T extends (k: string, v: unknown) => ValueValidationResult<infer U>
+  T extends (v: unknown, k?: string) => any
+> = T extends (v: unknown, k?: string) => ValueValidationResult<infer U>
   ? U
   : never;
 
@@ -186,7 +186,7 @@ export interface BooleanValidatorFunctions {
   ) => BooleanValidator;
 }
 
-export type ValidatorGenerator<T extends AnyValidator> = (generators?: ((k: string, v: unknown) => unknown)[]) => T;
+export type ValidatorGenerator<T extends AnyValidator> = (generators?: ((v: unknown, k?: string) => unknown)[]) => T;
 
 export interface BooleanValidator
   extends ValidatorFunction<boolean>,

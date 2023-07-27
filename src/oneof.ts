@@ -6,16 +6,16 @@ import {
 } from './types.js';
 
 // TODO: Get rid of this any!
-export function oneof<T extends ((k: string, v: unknown) => any)[]>(
+export function oneof<T extends ((v: unknown, k?: string) => any)[]>(
   ...validators: T
 ): ValidatorFunction<ValidatorFunctionResultType<T[number]>> {
   return (
-    k: string,
-    v: unknown
+    v: unknown,
+    k: string = ''
   ): ValueValidationResult<ValidatorFunctionResultType<T[number]>> => {
     const errors = [];
     for (const i of validators) {
-      const c = i(k, v);
+      const c = i(v, k);
       if (!c.hasError) {
         return c;
       }

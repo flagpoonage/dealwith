@@ -8,9 +8,9 @@ import { makePrimitiveValidator } from './shared.js';
 import { KeyedError, NullValidator } from './types.js';
 
 export function nullValue(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const main = makePrimitiveValidator([], generators, (k, v) => {
+  const main = makePrimitiveValidator([], generators, (v, k = '') => {
     if (v !== null) {
       throw new KeyedError(k, `Value ${v} is not null`);
     }

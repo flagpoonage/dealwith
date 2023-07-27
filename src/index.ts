@@ -7,6 +7,7 @@ import { nullValue } from './null.js';
 import { undefinedValue } from './undefined.js';
 import { oneof } from './oneof.js';
 import { optional } from './optional.js';
+import { ValidatorFunction } from './types.js';
 
 export const DW = {
   string,
@@ -17,8 +18,15 @@ export const DW = {
   null: nullValue,
   undefined: undefinedValue,
   oneof,
-  optional
+  optional,
+  assertion: <T>(v: ValidatorFunction<T>): (x: unknown) => x is T => {
+    return (x: unknown): x is T => {
+      return !v(x).hasError
+    }
+  }
 };
+
+
 
 export * from './types.js';
 export * from './flatten-error.js';

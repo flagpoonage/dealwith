@@ -9,9 +9,9 @@ import { makePrimitiveValidator } from './shared.js';
 import { KeyedError, UndefinedValidator } from './types.js';
 
 export function undefinedValue(
-  generators: ((k: string, v: unknown) => unknown)[] = []
+  generators: ((v: unknown, k?: string) => unknown)[] = []
 ) {
-  const main = makePrimitiveValidator([], generators, (k, v) => {
+  const main = makePrimitiveValidator([], generators, (v, k = '') => {
     if (v !== undefined) {
       throw new KeyedError(k, `Value ${v} is not undefined`);
     }

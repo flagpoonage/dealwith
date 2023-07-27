@@ -11,8 +11,8 @@ export function valueToString<T>(
 ) {
   return (fn: (v: T) => string = def) => {
     return string([
-      (k: string, v: unknown) => {
-        const result = previousValidator(k, v);
+      (v: unknown, k = '') => {
+        const result = previousValidator(v, k);
         if (result.hasError) {
           throw result.error;
         }
@@ -38,8 +38,8 @@ export function valueToNumber<T>(
 ) {
   return (fn: (v: T) => number = def) => {
     return number([
-      (k: string, v: unknown) => {
-        const result = previousValidator(k, v);
+      (v: unknown, k = '') => {
+        const result = previousValidator(v, k);
         if (result.hasError) {
           throw result.error;
         }
@@ -65,8 +65,8 @@ export function valueToBoolean<T>(
 ) {
   return (fn: (v: T) => boolean = def) => {
     return boolean([
-      (k: string, v: unknown) => {
-        const result = previousValidator(k, v);
+      (v: unknown, k = '') => {
+        const result = previousValidator(v, k)
         if (result.hasError) {
           throw result.error;
         }
@@ -89,8 +89,8 @@ export function valueToBoolean<T>(
 export function valueToCustom<T>(previousValidator: ValidatorFunction<T>) {
   return <C>(fn: (v: T) => C) => {
     return custom<C>([
-      (k: string, v: unknown) => {
-        const result = previousValidator(k, v);
+      (v: unknown, k = '') => {
+        const result = previousValidator(v, k);
         if (result.hasError) {
           throw result.error;
         }
@@ -113,8 +113,8 @@ export function valueToCustom<T>(previousValidator: ValidatorFunction<T>) {
 export function valueToArray<T>(previousValidator: ValidatorFunction<T>) {
   return <K>(fn: (v: T) => K[]) => {
     return array<K>([
-      (k: string, v: unknown) => {
-        const result = previousValidator(k, v);
+      (v: unknown, k = '') => {
+        const result = previousValidator(v, k);
         if (result.hasError) {
           throw result.error;
         }

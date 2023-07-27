@@ -5,17 +5,17 @@ import {
 } from './types.js';
 
 export function makePrimitiveValidator<T>(
-  assertions: ((k: string, v: T) => void)[],
-  generators: ((k: string, v: unknown) => unknown)[],
-  generatorAssertion?: (k: string, v: unknown) => void
-): (k: string, v: unknown) => ValueValidationResult<T> {
-  return (k: string, value: unknown): ValueValidationResult<T> => {
+  assertions: ((v: T, k?: string) => void)[],
+  generators: ((v: unknown, k?: string) => unknown)[],
+  generatorAssertion?: (v: unknown, k?: string) => void
+): (v: unknown, k?: string) => ValueValidationResult<T> {
+  return (value: unknown, k = ''): ValueValidationResult<T> => {
     try {
       const generated_value = generators.reduce(
-        (acc, val) => val(k, acc),
+        (acc, val) => val(acc, k),
         value
       );
-      generatorAssertion?.(k, generated_value);
+      generatorAssertion?.(generated_value, k);
 
       return runAssertions(k, assertions, generated_value as T);
     } catch (exception) {
@@ -40,11 +40,11 @@ export function makeError(
 
 export function runAssertions<T>(
   key: string,
-  assertions: ((k: string, v: T) => void)[],
+  assertions: ((v: T, k?: string) => void)[],
   value: T
 ): ValueValidationResult<T> {
   try {
-    assertions.forEach((assertion) => assertion(key, value));
+    assertions.forEach((assertion) => assertion(value, key));
     return {
       initialValue: value,
       result: value,
@@ -62,7 +62,7 @@ export const makeFunctionAssertion =
     typeName: string,
     assertionName: string
   ) =>
-  (k: string, v: T) => {
+  (v: T, k: string = '') => {
     const result = negate ? !assertion(v) : assertion(v);
 
     if (!result) {
