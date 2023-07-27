@@ -26,7 +26,7 @@ Give the function some data to validate
 // Type: unknown
 const data = dataFromUnknownSource();
 
-const output = schema('', data);
+const output = schema(data);
 ```
 
 Automatically returns the result with proper typing:
@@ -128,7 +128,7 @@ And if the `hasError` property is `false` the type can be narrowed to:
 The simplest way to narrow the type is to use an if statement, as shown in the example below.
 
 ```typescript
-const output = someSchema('', someData);
+const output = someSchema(someData);
 
 if (output.hasError) {
   // Typescript narrows the type here so that `output.result` is
@@ -317,7 +317,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.string();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: string
@@ -334,8 +334,8 @@ The `equals` assertion ensures that the string value provided, matches exactly t
 ```typescript
 const schema = D.string().equals('correct');
 
-const a = schema('', 'incorrect'); // hasError = true
-const b = schema('', 'correct'); // hasError = false
+const a = schema('incorrect'); // hasError = true
+const b = schema('correct'); // hasError = false
 ```
 
 The `not` assertion will ensure that the string value provided does not exactly match the argument to `equals`
@@ -343,8 +343,8 @@ The `not` assertion will ensure that the string value provided does not exactly 
 ```typescript
 const schema = D.string().not.equals('correct');
 
-const a = schema('', 'incorrect'); // hasError = false
-const b = schema('', 'correct'); // hasError = true
+const a = schema('incorrect'); // hasError = false
+const b = schema('correct'); // hasError = true
 ```
 
 
@@ -355,10 +355,10 @@ The `allowed` assertion ensures that the string value provided, matches exactly 
 ```typescript
 const schema = D.string().allowed(['yes', 'no']);
 
-const a = schema('', 'yes'); // hasError = false
-const b = schema('', 'no'); // hasError = false
-const c = schema('', 'hello'); // hasError = true
-const d = schema('', 'test'); // hasError = true
+const a = schema('yes'); // hasError = false
+const b = schema('no'); // hasError = false
+const c = schema('hello'); // hasError = true
+const d = schema('test'); // hasError = true
 ```
 
 The `not` assertion will ensure that the string value provided does not exactly match one of the strings in the argument to `allowed`
@@ -366,10 +366,10 @@ The `not` assertion will ensure that the string value provided does not exactly 
 ```typescript
 const schema = D.string().not.allowed(['yes', 'no']);
 
-const a = schema('', 'yes'); // hasError = true
-const b = schema('', 'no'); // hasError = true
-const c = schema('', 'hello'); // hasError = false
-const d = schema('', 'test'); // hasError = false
+const a = schema('yes'); // hasError = true
+const b = schema('no'); // hasError = true
+const c = schema('hello'); // hasError = false
+const d = schema('test'); // hasError = false
 ```
 
 **`empty()`**
@@ -379,8 +379,8 @@ The `empty` assertion ensures that the string value provided is an empty string 
 ```typescript
 const schema = D.string().empty();
 
-const a = schema('', 'incorrect'); // hasError = true
-const b = schema('', ''); // hasError = false
+const a = schema('incorrect'); // hasError = true
+const b = schema(''); // hasError = false
 ```
 
 The `not` assertion will ensure that the string value provided is not an empty string `''`
@@ -388,8 +388,8 @@ The `not` assertion will ensure that the string value provided is not an empty s
 ```typescript
 const schema = D.string().not.empty();
 
-const a = schema('', 'correct'); // hasError = false
-const b = schema('', ''); // hasError = true
+const a = schema('correct'); // hasError = false
+const b = schema(''); // hasError = true
 ```
 
 **`matches()`**
@@ -399,8 +399,8 @@ The `matches` assertion ensures that the string value provided matches the regul
 ```typescript
 const schema = D.string().matches(/\d/);
 
-const a = schema('', 'number one'); // hasError = true
-const b = schema('', 'number 1'); // hasError = false
+const a = schema('number one'); // hasError = true
+const b = schema('number 1'); // hasError = false
 ```
 
 The `not` assertion will ensure that the string value provided does not match the regular expression argument
@@ -408,8 +408,8 @@ The `not` assertion will ensure that the string value provided does not match th
 ```typescript
 const schema = D.string().not.matches(/\d/);
 
-const a = schema('', 'number one'); // hasError = false
-const b = schema('', 'number 1'); // hasError = true
+const a = schema('number one'); // hasError = false
+const b = schema('number 1'); // hasError = true
 ```
 
 
@@ -427,7 +427,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.number();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: number
@@ -444,7 +444,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.boolean();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: boolean
@@ -461,7 +461,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.null();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: null
@@ -478,7 +478,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.undefined();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: undefined
@@ -495,7 +495,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.array();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: any[]
@@ -512,7 +512,7 @@ import { unknownData } from 'unknownData';
 
 const schema = D.object();
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: object
@@ -532,7 +532,7 @@ const schema = D.oneof(
   D.number()
 );
 
-const output = schema('', unknownData);
+const output = schema(unknownData);
 
 if (!output.hasError) {
   // output.result type: string | number

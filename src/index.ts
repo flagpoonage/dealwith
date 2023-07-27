@@ -18,15 +18,14 @@ export const DW = {
   null: nullValue,
   undefined: undefinedValue,
   oneof,
-  optional,
-  assertion: <T>(v: ValidatorFunction<T>): (x: unknown) => x is T => {
-    return (x: unknown): x is T => {
-      return !v(x).hasError
-    }
-  }
+  optional
 };
 
-
+export function makeTypeAssertion <T>(v: ValidatorFunction<T>): (x: unknown) => x is T {
+  return (x: unknown): x is T => {
+    return !v(x).hasError
+  }
+}
 
 export * from './types.js';
 export * from './flatten-error.js';
