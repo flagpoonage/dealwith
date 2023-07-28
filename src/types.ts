@@ -145,6 +145,10 @@ export interface ObjectValidator<T = unknown>
   }) => ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T>>>;
 }
 
+export interface RecordValidator<V extends PropertyKey = string, T = unknown>
+  extends ValidatorFunction<{ [K in V]: T }>,
+    BaseConvertible<{ [K in V]: T }> {}
+
 export interface NullValidator
   extends ValidatorFunction<null>,
     BaseConvertible<null> {}

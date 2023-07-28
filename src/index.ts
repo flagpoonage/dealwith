@@ -10,6 +10,7 @@ import { optional } from './optional.js';
 import { ValidatorFunction, ValueValidationResult } from './types.js';
 import { stringUnion } from './string-union.js';
 import { error } from './error.js';
+import { record } from './record.js';
 
 export const DW = {
   string,
@@ -22,6 +23,7 @@ export const DW = {
   undefined: undefinedValue,
   oneof,
   stringUnion,
+  record,
   optional,
   anything:
     <T = unknown>(): ValidatorFunction<T> =>
