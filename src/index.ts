@@ -22,11 +22,11 @@ export const DW = {
   stringUnion,
   optional,
   anything:
-    (): ValidatorFunction<unknown> =>
-    (v: unknown): ValueValidationResult<unknown> => ({
+    <T = unknown>(): ValidatorFunction<T> =>
+    (v: unknown): ValueValidationResult<T> => ({
       initialValue: v,
       hasError: false,
-      result: v,
+      result: v as T,
     }),
 };
 
@@ -50,7 +50,7 @@ type R = Q | P;
 
 type X = {
   name: 'test';
-  value: R;
+  value: Q | P;
 };
 
 object().schema<X>({
