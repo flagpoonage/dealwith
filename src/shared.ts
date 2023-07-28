@@ -62,7 +62,7 @@ export const makeFunctionAssertion =
     typeName: string,
     assertionName: string
   ) =>
-  (v: T, k: string = '') => {
+  (v: T, k = '') => {
     const result = negate ? !assertion(v) : assertion(v);
 
     if (!result) {

@@ -4,6 +4,7 @@ import {
   valueToBoolean,
   valueToCustom,
   valueToArray,
+  stringToStringUnion,
 } from './converters.js';
 import {
   makeAssertionBuilder,
@@ -54,7 +55,9 @@ const makeAllowedAssertion =
   };
 
 const makeEmptyAssertion =
-  (negate: boolean) => () => (v: string, k = '') => {
+  (negate: boolean) =>
+  () =>
+  (v: string, k = '') => {
     makeAssertion(
       k,
       () => (negate ? v.length !== 0 : v.length === 0),
@@ -65,7 +68,9 @@ const makeEmptyAssertion =
   };
 
 const makeMatchesAssertion =
-  (negate: boolean) => (regex: RegExp) => (v: string, k = '') => {
+  (negate: boolean) =>
+  (regex: RegExp) =>
+  (v: string, k = '') => {
     const result = negate ? !regex.test(v) : regex.test(v);
 
     if (!result) {
@@ -106,10 +111,8 @@ export function string(
 
   main.assert = assert(false);
 
-  main.allowed = (...values: string[]) => {
-    assertions.push(makeAllowedAssertion(false, sensitivity.enabled)(values));
-    return main;
-  };
+  main.allowed = <T extends string[]>(...values: T) =>
+    stringToStringUnion<T>(main)((v) => values.includes(v));
 
   main.matches = (r: RegExp) => {
     assertions.push(makeMatchesAssertion(false)(r));
