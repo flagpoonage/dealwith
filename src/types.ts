@@ -178,7 +178,7 @@ export interface NumberValidator
 export interface StringValidatorFunctions {
   allowed: <T extends string[]>(...v: T) => StringUnionValidator<T>;
   matches: (r: RegExp) => StringValidator;
-  equals: (v: string) => StringValidator;
+  equals: <T extends string>(v: T) => StringUnionValidator<[T]>;
   empty: () => StringValidator;
   assert: (assertion: (v: string) => boolean, name: string) => StringValidator;
 }
@@ -187,8 +187,9 @@ export interface StringValidator
   extends ValidatorFunction<string>,
     BaseConvertible<string>,
     StringValidatorFunctions {
-  not: Omit<StringValidatorFunctions, 'allowed'> & {
+  not: Omit<StringValidatorFunctions, 'allowed' | 'equals'> & {
     allowed: (...v: string[]) => StringValidator;
+    equals: (v: string) => StringValidator;
   };
   case: (v: 'sensitive' | 'insensitive') => StringValidator;
   orNull: () => StringValidator;

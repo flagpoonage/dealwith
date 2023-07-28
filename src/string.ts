@@ -124,10 +124,13 @@ export function string(
     return main;
   };
 
-  main.equals = (eq: string) => {
-    assertions.push(makeEqualsAssertion(false, sensitivity.enabled)(eq));
-    return main;
-  };
+  main.equals = <T extends string>(value: T) =>
+    stringToStringUnion<[T]>(main)((v) => v === value);
+
+  // main.equals = (eq: string) => {
+  //   assertions.push(makeEqualsAssertion(false, sensitivity.enabled)(eq));
+  //   return main;
+  // };
 
   main.case = (v: 'sensitive' | 'insensitive') => {
     sensitivity.enabled = v === 'sensitive';
