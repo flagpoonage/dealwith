@@ -8,6 +8,7 @@ import { undefinedValue } from './undefined.js';
 import { oneof } from './oneof.js';
 import { optional } from './optional.js';
 import { ValidatorFunction } from './types.js';
+import { stringUnion } from './string-union.js';
 
 export const DW = {
   string,
@@ -18,13 +19,16 @@ export const DW = {
   null: nullValue,
   undefined: undefinedValue,
   oneof,
-  optional
+  stringUnion,
+  optional,
 };
 
-export function makeTypeAssertion <T>(v: ValidatorFunction<T>): (x: unknown) => x is T {
+export function makeTypeAssertion<T>(
+  v: ValidatorFunction<T>
+): (x: unknown) => x is T {
   return (x: unknown): x is T => {
-    return !v(x).hasError
-  }
+    return !v(x).hasError;
+  };
 }
 
 export * from './types.js';

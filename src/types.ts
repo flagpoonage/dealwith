@@ -81,6 +81,21 @@ export interface CustomValidatorFunctions<C> {
   assert: (assertion: (v: C) => boolean, name: string) => CustomValidator<C>;
 }
 
+export interface StringUnionValidator<T extends string[]>
+  extends ValidatorFunction<T[number]> {
+  toCustom: ToCustomFunction<T[number]>;
+  assert: (
+    assertion: (v: T) => boolean,
+    name: string
+  ) => StringUnionValidator<T>;
+  not: {
+    assert: (
+      assertion: (v: T) => boolean,
+      name: string
+    ) => StringUnionValidator<T>;
+  };
+}
+
 export interface CustomValidator<T>
   extends ValidatorFunction<T>,
     CustomValidatorFunctions<T> {
@@ -161,7 +176,7 @@ export interface NumberValidator
 }
 
 export interface StringValidatorFunctions {
-  allowed: (...v: string[]) => StringValidator;
+  allowed: <T extends string[]>(...v: T) => StringUnionValidator<T>;
   matches: (r: RegExp) => StringValidator;
   equals: (v: string) => StringValidator;
   empty: () => StringValidator;
@@ -172,7 +187,9 @@ export interface StringValidator
   extends ValidatorFunction<string>,
     BaseConvertible<string>,
     StringValidatorFunctions {
-  not: StringValidatorFunctions;
+  not: Omit<StringValidatorFunctions, 'allowed'> & {
+    allowed: (...v: string[]) => StringValidator;
+  };
   case: (v: 'sensitive' | 'insensitive') => StringValidator;
   orNull: () => StringValidator;
 }
@@ -186,7 +203,9 @@ export interface BooleanValidatorFunctions {
   ) => BooleanValidator;
 }
 
-export type ValidatorGenerator<T extends AnyValidator> = (generators?: ((v: unknown, k?: string) => unknown)[]) => T;
+export type ValidatorGenerator<T extends AnyValidator> = (
+  generators?: ((v: unknown, k?: string) => unknown)[]
+) => T;
 
 export interface BooleanValidator
   extends ValidatorFunction<boolean>,
