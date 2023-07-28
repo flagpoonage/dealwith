@@ -111,8 +111,10 @@ export function string(
 
   main.assert = assert(false);
 
-  main.allowed = <T extends string[]>(...values: T) =>
-    stringToStringUnion<T>(main)((v) => values.includes(v));
+  main.allowed = <T extends string[]>(...values: T) => {
+    assertions.push(makeAllowedAssertion(false, sensitivity.enabled)(values));
+    return stringToStringUnion<T>(main);
+  };
 
   main.matches = (r: RegExp) => {
     assertions.push(makeMatchesAssertion(false)(r));
@@ -124,8 +126,11 @@ export function string(
     return main;
   };
 
-  main.equals = <T extends string>(value: T) =>
-    stringToStringUnion<[T]>(main)((v) => v === value);
+  main.equals = <T extends string>(value: T) => {
+    assertions.push(makeEqualsAssertion(false, sensitivity.enabled)(value));
+    return stringToStringUnion<[T]>(main);
+  };
+  // stringToStringUnion<[T]>(main)((v) => v === value);
 
   // main.equals = (eq: string) => {
   //   assertions.push(makeEqualsAssertion(false, sensitivity.enabled)(eq));

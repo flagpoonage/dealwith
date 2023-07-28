@@ -138,25 +138,14 @@ export function valueToArray<T>(previousValidator: ValidatorFunction<T>) {
 export function stringToStringUnion<T extends string[]>(
   previousValidator: StringValidator
 ) {
-  return (fn: (v: T[number]) => boolean) => {
-    return stringUnion<T>([
-      (v: unknown, k = '') => {
-        const result = previousValidator(v, k);
-        if (result.hasError) {
-          throw result.error;
-        }
+  return stringUnion<T>([
+    (v: unknown, k = '') => {
+      const result = previousValidator(v, k);
+      if (result.hasError) {
+        throw result.error;
+      }
 
-        try {
-          return fn(result.result);
-        } catch (exception) {
-          throw new KeyedError(
-            k,
-            `Unable to create an array from ${typeof result.result} ${
-              result.result
-            }\n\n ${exception instanceof Error ? exception.message : exception}`
-          );
-        }
-      },
-    ]);
-  };
+      return v as T[number];
+    },
+  ]);
 }
