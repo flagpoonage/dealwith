@@ -11,6 +11,7 @@ import {
   ObjectValidator,
   ValueValidationResult,
   KeyedError,
+  ValidatorUnion,
 } from './types.js';
 
 export function object<T = unknown>(
@@ -44,7 +45,7 @@ export function object<T = unknown>(
   };
 
   main.schema = function <T>(s: {
-    [K in keyof T]: ValidatorFunction<T[K]>;
+    [K in keyof T]: ValidatorFunction<T[K]> | ValidatorUnion<T[K]>;
   }): ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T>>> {
     return object<T>([
       (v: unknown, k = '') => {

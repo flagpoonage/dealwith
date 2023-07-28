@@ -47,6 +47,8 @@ export interface ValidatorFunction<T = any> {
   (v: unknown, k?: string): ValueValidationResult<T>;
 }
 
+export type ValidatorUnion<T> = T extends T ? ValidatorFunction<T> : never;
+
 export type ValudationResultType<T> = T extends ValueValidationResult<infer U>
   ? U
   : unknown;

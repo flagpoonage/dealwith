@@ -11,7 +11,7 @@ export function oneof<T extends ((v: unknown, k?: string) => any)[]>(
 ): ValidatorFunction<ValidatorFunctionResultType<T[number]>> {
   return (
     v: unknown,
-    k: string = ''
+    k = ''
   ): ValueValidationResult<ValidatorFunctionResultType<T[number]>> => {
     const errors = [];
     for (const i of validators) {

@@ -38,5 +38,32 @@ export function makeTypeAssertion<T>(
   };
 }
 
+type Q = {
+  q: 'james';
+};
+
+type P = {
+  p: 'james';
+};
+
+type R = Q | P;
+
+type X = {
+  name: 'test';
+  value: R;
+};
+
+object().schema<X>({
+  name: string().equals('test'),
+  value: oneof(
+    object().schema<Q>({
+      q: string().equals('james'),
+    }),
+    object().schema<P>({
+      p: string().equals('james'),
+    })
+  ),
+});
+
 export * from './types.js';
 export * from './flatten-error.js';
