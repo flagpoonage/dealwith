@@ -9,6 +9,7 @@ import { oneof } from './oneof.js';
 import { optional } from './optional.js';
 import { ValidatorFunction, ValueValidationResult } from './types.js';
 import { stringUnion } from './string-union.js';
+import { error } from './error.js';
 
 export const DW = {
   string,
@@ -16,6 +17,7 @@ export const DW = {
   boolean,
   array,
   object,
+  error,
   null: nullValue,
   undefined: undefinedValue,
   oneof,
@@ -37,33 +39,6 @@ export function makeTypeAssertion<T>(
     return !v(x).hasError;
   };
 }
-
-type Q = {
-  q: 'james';
-};
-
-type P = {
-  p: 'james';
-};
-
-type R = Q | P;
-
-type X = {
-  name: 'test';
-  value: Q | P;
-};
-
-object().schema<X>({
-  name: string().equals('test'),
-  value: oneof(
-    object().schema<Q>({
-      q: string().equals('james'),
-    }),
-    object().schema<P>({
-      p: string().equals('james'),
-    })
-  ),
-});
 
 export * from './types.js';
 export * from './flatten-error.js';

@@ -149,6 +149,10 @@ export interface NullValidator
   extends ValidatorFunction<null>,
     BaseConvertible<null> {}
 
+export interface ErrorValidator
+  extends ValidatorFunction<Error>,
+    BaseConvertible<Error> {}
+
 export interface UndefinedValidator
   extends ValidatorFunction<undefined>,
     BaseConvertible<undefined> {}
