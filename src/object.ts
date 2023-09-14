@@ -10,8 +10,7 @@ import {
   ValidatorFunctionResultType,
   ObjectValidator,
   ValueValidationResult,
-  KeyedError,
-  ValidatorUnion,
+  KeyedError
 } from './types.js';
 
 export function object<T = unknown>(
@@ -44,17 +43,18 @@ export function object<T = unknown>(
     assert: assert(true),
   };
 
-  main.schema = function <T>(s: {
-    [K in keyof T]: ValidatorFunction<T[K]> | ValidatorUnion<T[K]>;
-  }): ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T>>> {
-    return object<T>([
+  main.schema = function <X>(s: {
+    [K in keyof X]: ValidatorFunction<X[K]>;
+  }): ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T & X>>> {
+    return object<T & X>([
       (v: unknown, k = '') => {
         const result = main(v, k);
+
         if (result.hasError) {
           throw result.error;
         }
 
-        const obj = result.result as unknown as Record<keyof T, unknown>;
+        const obj = { ...(v ?? {}), ...result.result } as unknown as Record<keyof T, unknown>;
 
         const output = (
           Object.entries(s) as [keyof T, ValidatorFunction][]

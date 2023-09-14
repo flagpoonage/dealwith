@@ -140,9 +140,9 @@ export interface ObjectValidator<T = unknown>
     BaseConvertible<T>,
     ObjectValidatorFunctions<T> {
   not: ObjectValidatorFunctions<T>;
-  schema: <T>(s: {
-    [K in keyof T]: ValidatorFunction<T[K]>;
-  }) => ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T>>>;
+  schema: <X>(s: {
+    [K in keyof X]: ValidatorFunction<X[K]>;
+  }) => ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T & X>>>;
 }
 
 export interface RecordValidator<V extends PropertyKey = string, T = unknown>
