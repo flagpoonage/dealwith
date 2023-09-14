@@ -9,6 +9,7 @@
     "lib"
   ],
   "typings": "./lib/esm/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "import": "./lib/esm/index.js",
