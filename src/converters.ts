@@ -1,10 +1,17 @@
 import { array } from './array.js';
-import { boolean } from './boolean.js';
+import { boolean, booleanFalse, booleanTrue } from './boolean.js';
 import { custom } from './custom.js';
 import { number } from './number.js';
 import { stringUnion } from './string-union.js';
 import { string } from './string.js';
-import { KeyedError, StringValidator, ValidatorFunction } from './types.js';
+import {
+  BooleanFalseValidator,
+  BooleanTrueValidator,
+  BooleanValidator,
+  KeyedError,
+  StringValidator,
+  ValidatorFunction,
+} from './types.js';
 
 export function valueToString<T>(
   previousValidator: ValidatorFunction<T>,
@@ -148,4 +155,23 @@ export function stringToStringUnion<T extends string[]>(
       return v as T[number];
     },
   ]);
+}
+
+type VType<T> = T extends true ? BooleanTrueValidator : BooleanFalseValidator;
+
+export function booleanToBooleanExact<T extends boolean>(
+  v: T,
+  previousValidator: BooleanValidator
+): VType<T> {
+  const fn = v ? booleanTrue : booleanFalse;
+  return fn([
+    (v: unknown, k = '') => {
+      const result = previousValidator(v, k);
+      if (result.hasError) {
+        throw result.error;
+      }
+
+      return v as boolean;
+    },
+  ]) as VType<T>;
 }

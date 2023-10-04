@@ -210,8 +210,16 @@ export interface StringValidator
 }
 
 export interface BooleanValidatorFunctions {
-  true: () => BooleanValidator;
-  false: () => BooleanValidator;
+  true: () => BooleanTrueValidator;
+  false: () => BooleanFalseValidator;
+  assert: (
+    assertion: (v: boolean) => boolean,
+    name: string
+  ) => BooleanValidator;
+}
+export interface NegatedBooleanValidatorFunctions {
+  true: () => BooleanFalseValidator;
+  false: () => BooleanTrueValidator;
   assert: (
     assertion: (v: boolean) => boolean,
     name: string
@@ -226,13 +234,22 @@ export interface BooleanValidator
   extends ValidatorFunction<boolean>,
     BaseConvertible<boolean>,
     BooleanValidatorFunctions {
-  not: BooleanValidatorFunctions;
+  not: NegatedBooleanValidatorFunctions;
 }
+export interface BooleanFalseValidator
+  extends ValidatorFunction<false>,
+    BaseConvertible<false> {}
+export interface BooleanTrueValidator
+  extends ValidatorFunction<true>,
+    BaseConvertible<true> {}
 
 export type AnyValidator =
   | BooleanValidator
+  | BooleanFalseValidator
+  | BooleanTrueValidator
   | NumberValidator
   | StringValidator
+  | StringUnionValidator<any>
   | ArrayValidator
   | ObjectValidator
   | UndefinedValidator
