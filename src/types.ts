@@ -190,7 +190,7 @@ export interface NumberValidator
 }
 
 export interface StringValidatorFunctions {
-  allowed: <T extends string[]>(...v: T) => StringUnionValidator<T>;
+  allowed: <T extends string>(...v: T[]) => StringUnionValidator<T[]>;
   matches: (r: RegExp) => StringValidator;
   equals: <T extends string>(v: T) => StringUnionValidator<[T]>;
   empty: () => StringValidator;

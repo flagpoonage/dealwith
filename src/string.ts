@@ -111,9 +111,9 @@ export function string(
 
   main.assert = assert(false);
 
-  main.allowed = <T extends string[]>(...values: T) => {
+  main.allowed = <T extends string>(...values: T[]) => {
     assertions.push(makeAllowedAssertion(false, sensitivity.enabled)(values));
-    return stringToStringUnion<T>(main);
+    return stringToStringUnion<T[]>(main);
   };
 
   main.matches = (r: RegExp) => {
