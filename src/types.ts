@@ -63,6 +63,9 @@ export type ValidatorFunctionResultType<
   ? U
   : never;
 
+export type InferSchema<T extends (v: unknown, k?: string) => any> =
+  ValidatorFunctionResultType<T>;
+
 export interface ToNumberFunction<T> {
   (fn?: (v: T) => number): NumberValidator;
 }
