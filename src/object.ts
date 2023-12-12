@@ -83,7 +83,7 @@ export function object<T = unknown>(
           }
 
           return acc;
-        }, {} as { [K in keyof T]: T[K] });
+        }, obj as { [K in keyof T]: T[K] });
       },
     ]);
   };
@@ -135,11 +135,13 @@ export function object<T = unknown>(
         return output.reduce<{ [K in keyof T]: T[K] }>((acc, [key, result]) => {
           if (!result.hasError) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            acc[key] = result.result as any;
+            if (result.result !== undefined) {
+              acc[key] = result.result as any;
+            }
           }
 
           return acc;
-        }, {} as { [K in keyof T]: T[K] });
+        }, obj as { [K in keyof T]: T[K] });
       },
     ]);
   };
