@@ -7,7 +7,11 @@ import { nullValue } from './null.js';
 import { undefinedValue } from './undefined.js';
 import { oneof } from './oneof.js';
 import { optional } from './optional.js';
-import { ValidatorFunction, ValueValidationResult } from './types.js';
+import {
+  InferSchema,
+  ValidatorFunction,
+  ValueValidationResult,
+} from './types.js';
 import { stringUnion } from './string-union.js';
 import { error } from './error.js';
 import { record } from './record.js';

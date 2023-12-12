@@ -146,6 +146,11 @@ export interface ObjectValidator<T = unknown>
   schema: <X>(s: {
     [K in keyof X]: ValidatorFunction<X[K]>;
   }) => ObjectValidator<ValidatorFunctionResultType<ValidatorFunction<T & X>>>;
+  partial: <X>(s: {
+    [K in keyof X]: ValidatorFunction<X[K]>;
+  }) => ObjectValidator<
+    ValidatorFunctionResultType<ValidatorFunction<T & Partial<X>>>
+  >;
 }
 
 export interface RecordValidator<V extends PropertyKey = string, T = unknown>

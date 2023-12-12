@@ -4,13 +4,14 @@ import {
   valueToBoolean,
   valueToCustom,
 } from './converters.js';
+import { optional } from './optional.js';
 import { makePrimitiveValidator, makeFunctionAssertion } from './shared.js';
 import {
   ValidatorFunction,
   ValidatorFunctionResultType,
   ObjectValidator,
   ValueValidationResult,
-  KeyedError
+  KeyedError,
 } from './types.js';
 
 export function object<T = unknown>(
@@ -54,13 +55,72 @@ export function object<T = unknown>(
           throw result.error;
         }
 
-        const obj = { ...(v ?? {}), ...result.result } as unknown as Record<keyof T, unknown>;
+        const obj = { ...(v ?? {}), ...result.result } as unknown as Record<
+          keyof T,
+          unknown
+        >;
 
         const output = (
           Object.entries(s) as [keyof T, ValidatorFunction][]
         ).map<[keyof T, ValueValidationResult<unknown>]>(([key, validator]) => {
           // Increase depth key here
           return [key, validator(obj[key], [k, key].filter(Boolean).join('.'))];
+        });
+
+        const errors = output.filter(([, r]) => r.hasError);
+
+        if (errors.length > 0) {
+          throw errors.reduce((acc, [key, result]) => {
+            acc[key] = result;
+            return acc;
+          }, {} as Record<keyof T, ValueValidationResult<unknown>>);
+        }
+
+        return output.reduce<{ [K in keyof T]: T[K] }>((acc, [key, result]) => {
+          if (!result.hasError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            acc[key] = result.result as any;
+          }
+
+          return acc;
+        }, {} as { [K in keyof T]: T[K] });
+      },
+    ]);
+  };
+
+  main.partial = function <X>(s: {
+    [K in keyof X]: ValidatorFunction<X[K]>;
+  }): ObjectValidator<
+    ValidatorFunctionResultType<ValidatorFunction<T & Partial<X>>>
+  > {
+    return object<T & X>([
+      (v: unknown, k = '') => {
+        const result = main(v, k);
+
+        if (result.hasError) {
+          throw result.error;
+        }
+
+        const obj = { ...(v ?? {}), ...result.result } as unknown as Record<
+          keyof T,
+          unknown
+        >;
+
+        const output = (
+          Object.entries(s) as [keyof T, ValidatorFunction][]
+        ).map<[keyof T, ValueValidationResult<unknown>]>(([key, validator]) => {
+          // Increase depth key here
+
+          const r = optional(validator)(
+            obj[key],
+            [k, key].filter(Boolean).join('.')
+          );
+
+          if (r.hasError) {
+            console.error('ERROR IS HERE', r.error);
+          }
+
+          return [key, r];
         });
 
         const errors = output.filter(([, r]) => r.hasError);
